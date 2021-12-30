@@ -15,21 +15,22 @@ app.use(express.static("public"));
 app.use(cors());
 
 // NodeMailer
-app.post("/contact", (req, res) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false,
-    auth: {
-      user: "max.harris44@ethereal.email",
-      pass: "7j6sWh3CnWffUty5Ad",
-    },
-  });
+const transporter = nodemailer.createTransport({
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "max.harris44@ethereal.email",
+    pass: "7j6sWh3CnWffUty5Ad",
+  },
+});
 
+app.post("/contact", (req, res) => {
+  console.log(res.data);
   const mailOptions = {
     to: "jobs@talentscode.com",
-    subject: "Test",
-    text: "Prueba desde node",
+    subject: "Formulario de Contacto",
+    text: "Prueba desde la APP",
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -43,7 +44,7 @@ app.post("/contact", (req, res) => {
 });
 
 // WebSockets
-let io = socket(server, {
+const io = socket(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],

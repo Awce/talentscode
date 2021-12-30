@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Alert, Form, Input, Tooltip, Button } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 
 import { InfoCircleOutlined } from "@ant-design/icons";
 
@@ -32,8 +33,20 @@ const ContactForm = () => {
       telefono: Yup.string().required("El teléfono no puede ir vacio"),
       mensaje: Yup.string().required("El mensaje no puede ir vacio"),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: ({ values }) => {
+      axios({
+        method: "POST",
+        url: "http://localhost:9000/contact",
+        data: values,
+      }).then(async (res) => {
+        const resData = await res;
+        console.log(resData);
+        if (resData.status === "success") {
+          console.log("Mensaje enviado");
+        } else if (resData.status === "fail") {
+          console.log("No se entrego el mensaje.");
+        }
+      });
     },
   });
 
@@ -49,7 +62,7 @@ const ContactForm = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item label="Nombre" name="nombre">
+        <Form.Item label="Nombre">
           <Input
             className="input-form"
             name="nombre"
@@ -63,7 +76,7 @@ const ContactForm = () => {
           ) : null}
         </Form.Item>
 
-        <Form.Item label="Email" name="email">
+        <Form.Item label="Email">
           <Input
             suffix={
               <Tooltip title="Un correo se parece a esto: ejemplo@mail.com">
@@ -82,7 +95,7 @@ const ContactForm = () => {
           ) : null}
         </Form.Item>
 
-        <Form.Item label="Teléfono" name="telefono">
+        <Form.Item label="Teléfono">
           <Input
             className="input-form"
             name="telefono"
@@ -96,7 +109,7 @@ const ContactForm = () => {
           ) : null}
         </Form.Item>
 
-        <Form.Item label="Mensaje" name="mensaje">
+        <Form.Item label="Mensaje">
           <TextArea
             rows={3}
             className="input-form"
